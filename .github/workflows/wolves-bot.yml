@@ -1,0 +1,45 @@
+name: wolves-bot
+
+on:
+  # Runs at the top of every hour. bot.py decides whether THIS hour is one of
+  # today's randomly chosen posting slots, so most runs do nothing -- that's
+  # expected and free. GitHub may delay scheduled runs by a few minutes under
+  # load, which is fine for a banter bot.
+  schedule:
+    - cron: "0 * * * *"
+  # Lets you trigger a run by hand from the Actions tab (handy for testing).
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Plan only, don't actually post"
+        type: boolean
+        default: false
+
+jobs:
+  tweet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Run the bot
+        env:
+          # X (Twitter)
+          CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+          CONSUMER_SECRET: ${{ secrets.CONSUMER_SECRET }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+          # Mastodon (add these secrets once your account is ready)
+          MASTODON_API_BASE_URL: ${{ secrets.MASTODON_API_BASE_URL }}
+          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+          # Bluesky (add these secrets once your account is ready)
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+        run: python bot.py
