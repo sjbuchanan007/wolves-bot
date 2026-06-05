@@ -4,27 +4,80 @@
 # Keep each line under 280 characters. Edit freely — no code knowledge needed.
 # (Tip: review the @player handles each transfer window — some may have moved on.)
 
-#Come On You Wolves!
-#Fucking Wolves Ay We
-#Those were the days my friend
-#Stevie Bulls a Tatter
-#When the Wolves go marching in
-#Boys of the Black Country
-#Shit on the Albion
-#I was born under a wanderers scarf
-#We love you Wanderers, we do.
-#Wolverhampton Wanderers FC
-#The South Bank \o/
-#The North Bank \o/
-#Stand up if you love the Wolves
-#Thumbs up if you love Sir Jack
+Come On You Wolves!
+Fucking Wolves Ay We
+Those were the days my friend
+Stevie Bulls a Tatter
+When the Wolves go marching in
+Boys of the Black Country
+Shit on the Albion
+I was born under a wanderers scarf
+We love you Wanderers, we do.
+Wolverhampton Wanderers FC
+The South Bank \o/
+The North Bank \o/
+Stand up if you love the Wolves
+Thumbs up if you love Sir Jack
 Come on me babbies!
-##I'd rather be a dingle...
-#Always shit on a Tesco carrier bag!
-#Wanderers will never die, we'll keep the gold flag flying high
-#Out of darkness cometh light...
+I'd rather be a dingle...
+Always shit on a Tesco carrier bag!
+Wanderers will never die, we'll keep the gold flag flying high
+Out of darkness cometh light...
 Love ya @wolvesfc.bsky.social xx
 Wolves Ay We @wolvesfc.bsky.social
+
+# --- Pride & chants ---
+Hi Ho Wolverhampton!
+Once a Wolf, always a Wolf
+Gold and black, we'll never look back
+My heart beats gold and black
+Wolves till I die
+Proud to be a Wolf
+Pride of the Midlands
+The pack is back
+For the love of the Old Gold
+We are Wolves, super Wolves!
+Nobody likes us when we're winning — Wolves Ay We
+Fly high, Wolves
+
+# --- Black Country ---
+Black Country and proud — Wolves Ay We!
+Bostin' day to be a Wolf
+Ow we doin', Wolves fans?
+Born in the Black Country, gold in the blood
+
+# --- History & glory ---
+Champions of England, three times over
+FA Cup winners — 1893, 1908, 1949, 1960
+Stan Cullis built giants
+European nights under the Molineux lights
+We lit up English football — literally
+UEFA Cup finalists '72 and proud of it
+
+# --- Molineux & matchday ---
+There's no place like Molineux
+Molineux — our home, our fortress
+When The Liquidator plays... WOLVES!
+Floodlights on at Molineux, there's nowt better
+The roar of the South Bank
+
+# --- Legends ---
+There's only one Steve Bull
+Bully — 306 goals and a legend forever
+Billy Wright: captain, gentleman, Wolf
+The Doog, a Molineux hero
+Stan Cullis, the iron manager
+Sir Jack, we'll never forget you
+
+# --- Identity ---
+The leaping wolf on my chest
+Fear the wolf
+One pack, one family
+Howl with pride
+
+# --- Cheeky / rivalry (optional, spicy) ---
+Albion? Never heard of 'em
+Pride of the Midlands — not them down the road
 
 # --- Player shout-outs (2016-era squad, disabled) -------------------------
 # Uncomment and update these with the current squad's handles before using.
