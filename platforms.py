@@ -12,6 +12,12 @@ of: "posted", "skipped", "dry-run", "error".
 """
 
 import os
+import re
+
+# A Bluesky handle always contains a dot (e.g. wolvesfc.bsky.social). This lets
+# us turn those into real mentions while leaving legacy X-style @names (no dot,
+# e.g. @officialwolves) as plain text.
+_BLUESKY_HANDLE_RE = re.compile(r"@([a-zA-Z0-9][a-zA-Z0-9.-]+\.[a-zA-Z]{2,})")
 
 
 def _have(*names):
@@ -58,6 +64,38 @@ def post_to_mastodon(text, dry_run=False):
         return ("Mastodon", "error", str(err))
 
 
+def _bluesky_richtext(client, text):
+    """Turn @handle.tld mentions into real Bluesky mentions (facets).
+
+    Never raises: if a handle can't be resolved we fall back to plain text for
+    that token, and we print why, so a failure is visible in the logs rather
+    than silently posting plain text.
+    """
+    try:
+        from atproto import client_utils
+
+        builder = client_utils.TextBuilder()
+        pos = 0
+        mentioned = False
+        for match in _BLUESKY_HANDLE_RE.finditer(text):
+            if match.start() > pos:
+                builder.text(text[pos:match.start()])
+            try:
+                did = client.resolve_handle(match.group(1)).did
+                builder.mention(match.group(0), did)
+                mentioned = True
+            except Exception as err:
+                print(f"  (bluesky: couldn't resolve {match.group(0)}: {err})")
+                builder.text(match.group(0))
+            pos = match.end()
+        if pos < len(text):
+            builder.text(text[pos:])
+        return builder if mentioned else text
+    except Exception as err:
+        print(f"  (bluesky: rich-text build failed, posting plain text: {err})")
+        return text
+
+
 def post_to_bluesky(text, dry_run=False):
     if not _have("BLUESKY_HANDLE", "BLUESKY_APP_PASSWORD"):
         return ("Bluesky", "skipped", "no credentials set")
@@ -68,11 +106,7 @@ def post_to_bluesky(text, dry_run=False):
     client = Client()
     try:
         client.login(os.environ["BLUESKY_HANDLE"], os.environ["BLUESKY_APP_PASSWORD"])
-        client.send_post(text)
+        client.send_post(_bluesky_richtext(client, text))
         return ("Bluesky", "posted", text)
     except Exception as err:
         return ("Bluesky", "error", str(err))
-
-
-# All backends, tried in order. Add a new platform by appending its function.
-ALL = (post_to_x, post_to_mastodon, post_to_bluesky)
