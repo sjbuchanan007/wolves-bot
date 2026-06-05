@@ -110,3 +110,6 @@ def post_to_bluesky(text, dry_run=False):
         return ("Bluesky", "posted", text)
     except Exception as err:
         return ("Bluesky", "error", str(err))
+
+# All backends, tried in order. Add a new platform by appending its function.
+ALL = (post_to_x, post_to_mastodon, post_to_bluesky)
