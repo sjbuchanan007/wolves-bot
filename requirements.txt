@@ -1,0 +1,5 @@
+# Install backends for the platforms you use. They're imported lazily, so an
+# unused one won't break anything, but it's simplest to install all three.
+tweepy>=4.14          # X (Twitter)
+Mastodon.py>=1.8      # Mastodon
+atproto>=0.0.55       # Bluesky
