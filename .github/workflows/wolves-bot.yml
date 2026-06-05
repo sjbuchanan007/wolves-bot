@@ -14,6 +14,10 @@ on:
         description: "Plan only, don't actually post"
         type: boolean
         default: false
+      force:
+        description: "Post immediately, ignoring the schedule (for testing)"
+        type: boolean
+        default: false
 
 jobs:
   tweet:
@@ -42,4 +46,5 @@ jobs:
           BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
           BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
           DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+          FORCE_POST: ${{ inputs.force && '1' || '0' }}
         run: python bot.py
