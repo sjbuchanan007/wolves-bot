@@ -1,0 +1,66 @@
+# Wolves bot tweet list
+# ---------------------
+# One tweet per line. Blank lines and lines starting with "#" are ignored.
+# Keep each line under 280 characters. Edit freely — no code knowledge needed.
+# (Tip: review the @player handles each transfer window — some may have moved on.)
+
+Come On You Wolves!
+Fucking Wolves Ay We
+Those were the days my friend
+Stevie Bulls a Tatter
+When the Wolves go marching in
+Boys of the Black Country
+Shit on the Albion
+I was born under a wanderers scarf
+Love ya @officialwolves xx
+We love you Wanderers, we do.
+Wolverhampton Wanderers FC
+There's only one Carl Ikeme
+The South Bank \o/
+The North Bank \o/
+Stand up if you love the Wolves
+Thumbs up if you love Sir Jack
+I'd rather be a dingle...
+Come on me babbies!
+Always shit on a Tesco carrier bag!
+Wanderers will never die, we'll keep the gold flag flying high
+Out of darkness cometh light...
+Wolves Ay We @officialwolves
+
+# --- Player shout-outs (2016-era squad, disabled) -------------------------
+# Uncomment and update these with the current squad's handles before using.
+# Tagging a defunct/reassigned handle can pull in a random stranger, so check
+# each account is still the player before re-enabling.
+# Wolves Ay We @EusebioGomes7
+# Wolves Ay We @Saaaam92
+# Wolves Ay We @_DaveEdwards
+# Wolves Ay We @TonyDaley7
+# Wolves Ay We @JordanG_14
+# Wolves Ay We @bsigurson
+# Wolves Ay We @emimartinezz1
+# Wolves Ay We @EbanksLandell
+# Wolves Ay We @mattdoherty20
+# Wolves Ay We @DNouha
+# Wolves Ay We @DominicIorfa
+# Wolves Ay We @jacko_8
+# Wolves Ay We @jon1flatt
+# Wolves Ay We @mccareyA1
+# Wolves Ay We @LeeEvans94
+# Wolves Ay We @MattMurray20
+# Wolves Ay We @MrJodyCraddock
+# Wolves Ay We @A1F1E9
+# Wolves Ay We @Kortney_30
+# Wolves Ay We @NathanByrne_
+# Wolves Ay We @Michal_Zyro
+# Wolves Ay We @niall_ennis10
+# Wolves Ay We @originalsimo97
+# Wolves Ay We @SDeslandes97
+# Wolves Ay We @austsamuels9
+# Wolves Ay We @jedwallace12
+# Wolves Ay We @aaroncollinsx
+# Wolves Ay We @ben42ohanlon
+# Wolves Ay We @ConnorRonan10
+# Wolves Ay We @Danny_Batth
+# Wolves Ay We @tim_spiers_Star
+# Wolves Ay We @BEnobakhare
+# Wolves Ay We @aaronhayden_
