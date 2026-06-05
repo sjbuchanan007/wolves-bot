@@ -28,10 +28,10 @@ def post_to_x(text, dry_run=False):
     import tweepy
 
     client = tweepy.Client(
-        consumer_key=os.environ["2vpoPKTM3La1vu2qfuLnTe34d"],
-        consumer_secret=os.environ["I9rCjemb6fgMMBJaYSg2jmlYFrhdVuud2txkT5avYAxxvPhMxU"],
-        access_token=os.environ["2815484683-YmRqTbs1LaHT4nIyk1YyXTgfJvdnDRzq21KJuSU"],
-        access_token_secret=os.environ["rmnS1RFuypHH9jlwnx9INGkvKn7SG0bya8LKVhSvN0Vx2"],
+        consumer_key=os.environ["CONSUMER_KEY"],
+        consumer_secret=os.environ["CONSUMER_SECRET"],
+        access_token=os.environ["ACCESS_TOKEN"],
+        access_token_secret=os.environ["ACCESS_TOKEN_SECRET"],
     )
     try:
         client.create_tweet(text=text)
