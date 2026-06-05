@@ -93,17 +93,23 @@ def plan_for_day(day, tweets):
 def main():
     now = datetime.now(timezone.utc).astimezone(TIMEZONE)
     dry_run = os.environ.get("DRY_RUN") == "1"
-    plan = plan_for_day(now.date(), load_tweets())
+    force = os.environ.get("FORCE_POST") == "1"
+    tweets = load_tweets()
+    plan = plan_for_day(now.date(), tweets)
 
     summary = ", ".join(f"{h:02d}:00" for h in sorted(plan))
     print(f"{now:%Y-%m-%d %H:%M %Z} | today's plan: {len(plan)} posts at [{summary}]")
 
     text = plan.get(now.hour)
     if text is None:
-        print(f"Hour {now.hour} isn't a posting slot today -- nothing to do.")
-        return
+        if not force:
+            print(f"Hour {now.hour} isn't a posting slot today -- nothing to do.")
+            return
+        # FORCE_POST: ignore the schedule and send a one-off (for testing).
+        text = random.SystemRandom().choice(tweets)
+        print("FORCE_POST set -- posting a one-off test, ignoring the schedule.")
 
-    print(f"This is a posting slot. Selected: {text!r}")
+    print(f"Selected: {text!r}")
     results = [backend(text, dry_run=dry_run) for backend in platforms.ALL]
 
     posted = errored = 0
