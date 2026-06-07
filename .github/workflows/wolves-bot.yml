@@ -6,7 +6,7 @@ on:
   # expected and free. GitHub may delay scheduled runs by a few minutes under
   # load, which is fine for a banter bot.
   schedule:
-    - cron: "0 * * * *"
+    - cron: "17 * * * *"
   # Lets you trigger a run by hand from the Actions tab (handy for testing).
   workflow_dispatch:
     inputs:
