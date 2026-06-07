@@ -5,18 +5,19 @@ Posts a random line from tweets.txt a handful of times a day, at random-ish
 hours, so it reads like a person rather than a clockwork machine. Posts to
 every platform that has credentials configured (see platforms.py).
 
-Scheduling (no database / no server keeping state):
-the whole day's plan is derived deterministically from today's date. Every run
-that day computes the SAME plan -- which hours to post at, and which tweet goes
-out at each hour -- and only acts when the current hour is one of the slots.
-Run this once an hour (see the GitHub Actions workflow) and you get a fresh,
-random pattern of 6-12 posts every day with nothing to store between runs.
+Scheduling (no server, tolerant of GitHub's flaky cron):
+the whole day's plan is derived deterministically from today's date -- which
+hours to post at, and which tweet goes out at each. The workflow runs often;
+each run posts the earliest slot that's due (its hour has passed) but not yet
+done, recording it in state.json. So if GitHub drops a run, a later one catches
+the slot up, and nothing is ever posted twice.
 
 No repeats: each day's tweets are drawn from a shuffled copy of the list, so a
-line never goes out twice in the same day, and we also make sure today's first
-post isn't a repeat of yesterday's last.
+line never goes out twice in the same day, and today's first post is never a
+repeat of yesterday's last.
 """
 
+import json
 import os
 import random
 import sys
@@ -37,6 +38,9 @@ MIN_POSTS_PER_DAY = 6
 MAX_POSTS_PER_DAY = 12
 
 TWEETS_FILE = Path(__file__).with_name("tweets.txt")
+# Records which of today's slots have already been posted, so the bot can run
+# often, catch up slots that GitHub's flaky cron missed, and never repeat one.
+STATE_FILE = Path(__file__).with_name("state.json")
 
 
 def load_tweets():
@@ -90,6 +94,35 @@ def plan_for_day(day, tweets):
     return plan
 
 
+def load_state(today):
+    """Today's posting state: {"date": "...", "posted": [hours]}.
+
+    Resets automatically when the stored date isn't today.
+    """
+    try:
+        data = json.loads(STATE_FILE.read_text())
+    except (FileNotFoundError, ValueError):
+        data = {}
+    if data.get("date") != today.isoformat():
+        return {"date": today.isoformat(), "posted": []}
+    return data
+
+
+def save_state(state):
+    STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
+
+
+def broadcast(text, dry_run):
+    """Send to every backend; return (posted_count, errored_count)."""
+    posted = errored = 0
+    for backend in platforms.ALL:
+        platform, status, detail = backend(text, dry_run=dry_run)
+        print(f"  {platform:<9} {status:<8} {detail}")
+        posted += status == "posted"
+        errored += status == "error"
+    return posted, errored
+
+
 def main():
     now = datetime.now(timezone.utc).astimezone(TIMEZONE)
     dry_run = os.environ.get("DRY_RUN") == "1"
@@ -100,25 +133,42 @@ def main():
     summary = ", ".join(f"{h:02d}:00" for h in sorted(plan))
     print(f"{now:%Y-%m-%d %H:%M %Z} | today's plan: {len(plan)} posts at [{summary}]")
 
-    text = plan.get(now.hour)
-    if text is None:
-        if not force:
-            print(f"Hour {now.hour} isn't a posting slot today -- nothing to do.")
-            return
-        # FORCE_POST: ignore the schedule and send a one-off (for testing).
+    # FORCE_POST: one-off test post, ignores schedule and state entirely.
+    if force:
         text = random.SystemRandom().choice(tweets)
-        print("FORCE_POST set -- posting a one-off test, ignoring the schedule.")
+        print(f"FORCE_POST set -- one-off test, ignoring schedule. Selected: {text!r}")
+        _, errored = broadcast(text, dry_run)
+        if errored:
+            sys.exit(f"{errored} platform(s) failed to post.")
+        return
 
-    print(f"Selected: {text!r}")
-    results = [backend(text, dry_run=dry_run) for backend in platforms.ALL]
+    # Catch-up: post the earliest slot that's due (its hour has passed) but not
+    # yet done. One per run, so several missed slots clear gradually, not in a
+    # burst. This tolerates GitHub dropping runs -- any later run catches up.
+    state = load_state(now.date())
+    posted_slots = set(state["posted"])
+    due = [h for h in sorted(plan) if h <= now.hour and h not in posted_slots]
 
-    posted = errored = 0
-    for platform, status, detail in results:
-        print(f"  {platform:<9} {status:<8} {detail}")
-        posted += status == "posted"
-        errored += status == "error"
+    if not due:
+        done = sorted(posted_slots)
+        print(f"Nothing due (hour {now.hour}; already posted today: {done}).")
+        return
 
+    slot = due[0]
+    text = plan[slot]
+    if len(due) > 1:
+        print(f"{len(due)} slots due {due}; catching up the earliest first.")
+    print(f"Posting slot {slot:02d}:00 -> {text!r}")
+
+    posted, errored = broadcast(text, dry_run)
+
+    if posted and not dry_run:
+        posted_slots.add(slot)
+        state["posted"] = sorted(posted_slots)
+        save_state(state)
+        print(f"Recorded slot {slot:02d}:00 as posted.")
     if errored:
+        # Don't record the slot -- a later run retries it.
         sys.exit(f"{errored} platform(s) failed to post.")
     if posted == 0 and not dry_run:
         print("No platforms configured -- set credentials as secrets to go live.")
